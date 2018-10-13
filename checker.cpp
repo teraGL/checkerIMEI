@@ -22,17 +22,18 @@ bool isRightIMEI(const std::string& imei)
     }
 
     // check if the sum is divisible by 10
-    int sum_every_digits = 0;
+    int sum_digits = 0;
     for (size_t i = 0; i < first14digits.size(); ++i) {
         if (i % 2 != 0) {
-            sum_every_digits += (first14digits[i] / 10 > 0) ? 1 + first14digits[i] - 10
-                                                            : first14digits[i];
+            sum_digits += (first14digits[i] / 10 > 0) ? 1 + first14digits[i] - 10
+                                                      : first14digits[i];
         } else {
-            sum_every_digits += first14digits[i];
+            sum_digits += first14digits[i];
         }
     }
     
-    if (10 - sum_every_digits % 10 != imei.back() - '0') {
+    int checksum = (sum_digits == 0) : 0 ? 10 - sum_digits % 10;
+    if (checksum != imei.back() - '0') {
         std::cerr << "The sum of the digits is not equal to the Last digit" << std::endl;
         return false;
     }
