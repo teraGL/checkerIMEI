@@ -13,7 +13,7 @@ bool isRightIMEI(const std::string& imei)
         return false;
     }
 
-    // sum the Luhn checksum of the IMEI digits
+    // Calculate the Luhn checksum of the IMEI digits
     int checksum = 0;
     for (size_t i = 0; i < imei.length() - 1; ++i) {
         if (i % 2) {
