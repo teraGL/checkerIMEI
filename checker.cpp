@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 
 bool isRightIMEI(const std::string& imei)
 {
@@ -14,26 +13,20 @@ bool isRightIMEI(const std::string& imei)
         return false;
     }
 
-    // double every other digit
-    std::vector<int> first14digits;
+    // sum the Luhn checksum of the IMEI digits
+    int checksum = 0;
     for (size_t i = 0; i < imei.length() - 1; ++i) {
-        (i % 2) ? first14digits.push_back((imei[i] - '0') + (imei[i] - '0'))
-                : first14digits.push_back(imei[i] - '0');
-    }
-
-    // check if the sum is divisible by 10
-    int sum_digits = 0;
-    for (size_t i = 0; i < first14digits.size(); ++i) {
-        if (i % 2 != 0) {
-            sum_digits += (first14digits[i] / 10 > 0) ? 1 + first14digits[i] - 10
-                                                      : first14digits[i];
+        if (i % 2) {
+            int doubled_digit = 2 * (imei[i] - '0');
+            checksum += (doubled_digit > 9) ? 1 + doubled_digit - 10 : doubled_digit;
         } else {
-            sum_digits += first14digits[i];
+            checksum += imei[i] - '0';
         }
     }
-    
-    int checksum = (sum_digits == 0) : 0 ? 10 - sum_digits % 10;
-    if (checksum != imei.back() - '0') {
+
+    // make checksum divisible by 10 and check with last digit
+    int final_digit = (10 - checksum % 10) % 10;
+    if (final_digit != imei.back() - '0') {
         std::cerr << "The sum of the digits is not equal to the Last digit" << std::endl;
         return false;
     }
